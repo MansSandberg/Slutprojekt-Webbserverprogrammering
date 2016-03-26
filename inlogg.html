@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="stilmall.css" />
+<title>Minitwitter - Inloggning</title>
+
+<style>
+#content
+{
+	background-color:#FFFFFF;
+}
+#registrera
+{
+	display:none;
+}
+
+#loggaIn
+{
+	display:block;
+}
+
+fieldset#loggain
+{
+	width:300px;
+	height:auto;
+	display:inline-block;
+	overflow:auto;
+	margin-bottom:10px;
+}
+
+fieldset#registrera
+{
+	width:400px;
+	height:auto;
+	display:inline-block;
+	overflow:auto;
+	margin-bottom:10px;
+}
+
+#flode
+{
+	margin-top:100px;
+	background-color:#FFFFFF;
+}
+
+button
+{
+	margin:10px;
+}
+</style>
+</head>
+
+<body>
+<script src="login-registrera.js"></script>
+<div id="content">
+	<div id="header">
+	<img id="logo" src="minitwitter.png" alt="logotype" />
+	</div>
+    <div id="flode">
+    <div id="loggaIn"> 
+    <h1>Logga in</h1>
+    <form method="post" action="loggain.php" name="Login">
+    <fieldset id="loggain">
+    <table>
+    <tr>
+    <td>Mail:</td><td><input id="mail" name="mail" type="email" required></td>
+    </tr>
+    
+    <tr>
+    <td>Lösenord:</td><td><input id="losenord" name="losenord" type="password" required></td>
+    </tr>
+    </table>
+    
+    <input type="hidden" name="formular" value="login">
+    <input type="submit" id="loginKnapp" value="Logga in">
+    </fieldset>
+    </form>
+    <p>Har du inget konto?</p><button onClick="registrera()">Registrera dig</button></div>
+    </div>
+    
+    
+    <div id="registrera">
+       <h1>Registrera</h1>
+    <form method="post" name="Registrera" onSubmit="return formularKontroll();" action="loggain.php">
+    <fieldset id="registrera">
+    <table>
+    <tr>
+    <td>Förnamn:</td><td><input id="fornamn" name="fornamn" type="text" required></td>
+    </tr>
+    
+    <tr>
+    <td>Efternamn:</td><td><input id="efternamn" name="efternamn" type="text" required></td>
+    </tr>
+    
+    <tr>
+    <td>Födelsedatum:</td><td><input id="fodelsedatum" name="fodelsedatum"  type="date" required></td>
+    </tr>
+    
+    <tr>
+    <td>Mail:</td><td><input id="mail" name="mail" type="email" required></td>
+    </tr>
+    
+    <tr>
+    <td>Lösenord:</td><td><input id="nyttlosenord" name="losenord" type="password" onChange="bekraftaLosenord()" required></td>
+    </tr>
+    
+    <tr>
+    <td>Bekräfta lösenord:</td><td><input id="bekraftalosenord" name="bekraftalosenord" type="password" onBlur="bekraftaLosenord()" required></td>
+    </tr>
+    </table>
+    
+    <input type="hidden" name="formular" value="registrera">
+    <input type="submit" id="registreraKnapp" value="Registrera nytt konto">
+    </fieldset>
+    </form>
+    </div>
+</div>
+
+</body>
+</html>

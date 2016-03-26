@@ -1,0 +1,245 @@
+@charset "utf-8";
+/* CSS Document */
+@font-face
+{
+	font-family: status;
+	src:url(style/status.ttf);
+}
+
+body
+{
+	background-color:#20B2AA;
+	margin:0px;
+}
+
+#content
+{
+	/*background-color:#FEFEFE;*/
+	width:1000px;
+	height:auto;
+	display:block;
+	overflow:auto;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#header
+{
+	background-color:#20B2AA;
+	width:1000px;
+	height:100px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:0px;
+	position:fixed;
+	z-index:3;
+}
+
+#meny
+{
+	background-color:#20B2AA;
+	width:1000px;
+	height:50px;
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:100px;
+	position:fixed;
+	z-index:3;
+}
+
+.menyknapp
+{
+	background: linear-gradient(#40E0D0,#008B8B);
+	width:auto;
+	height:auto;
+	display:block;
+	overflow:auto;
+	margin-left:15px;
+	vertical-align:middle;
+	border:2px;
+	border-style:solid;
+	border-radius:10px;
+	border-color:#000000;
+	float:left;
+}
+
+#menyknapploggaut
+{
+	background: linear-gradient(#40E0D0,#008B8B);
+	width:auto;
+	height:auto;
+	display:block;
+	overflow:auto;
+	margin-right:15px;
+	vertical-align:middle;
+	border:2px;
+	border-style:solid;
+	border-radius:10px;
+	border-color:#000000;
+	float:right;
+}
+
+a.meny
+{
+	font-size:20px;
+}
+
+#flode
+{
+	background-color:#20B2AA;
+	width:1000px;
+	height:auto;
+	display:block;
+	overflow:auto;
+    margin-left:auto;
+    margin-right:auto;
+	margin-top:150px;
+	position:relative;
+	z-index:2;
+}
+
+.inlagg
+{
+	background-color:#FFFFFF;
+	width:1000px;
+	height:auto;
+	min-height:80px;
+	display:block;
+	overflow:auto;
+	position:relative;
+	margin-bottom:5px;
+	float:left;
+	position:relative;
+	z-index:2;
+}
+
+.interagera
+{
+	background-color:#FFFF;
+	width:100%;
+	height:auto;
+	position:relative;
+	display:block;
+	line-height:normal;
+	vertical-align:bottom;
+	overflow:auto;
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom:0px;
+	margin-top:10px;
+	bottom:0px;
+	float:left;
+	clear:both;
+}
+
+a.gillakommentera
+{
+	margin:10px;
+  	float:left;
+}
+
+p.interaktioner
+{
+	margin:10px;
+	clear:none;
+	float:right;
+}
+
+p,a,h1,h2,h3,h4,h5,h6, label
+{
+	
+	font-family:status;
+	margin:10px;
+}
+
+a
+{
+	color:#000000;
+}
+
+a:visited
+{
+	color:#000000;
+}
+
+textarea
+{
+	
+	font-family:status;
+	resize:none;
+	float:left;
+}
+
+input[type="file"]
+{
+	font-family:status;
+	margin:10px;
+	float:left;
+}
+
+.skickastatus
+{
+	font-family:status;
+	font-size:15px;
+	background: linear-gradient(#40E0D0,#008B8B);
+	width:auto;
+	height:auto;
+	display:inline-block;
+	overflow:auto;
+	margin-left:15px;
+	margin-top:-19px;
+	border:2px;
+	border-style:solid;
+	border-radius:10px;
+	border-color:#000000;
+	clear:none;
+	float:right;
+	
+	font-size:24px;
+}
+
+button
+{
+	font-family:status;
+	font-size:10px;
+	background: linear-gradient(#40E0D0,#008B8B);
+	width:auto;
+	height:auto;
+	display:block;
+	overflow:auto;
+	margin:10px;
+	margin-top:10px;
+	border:2px;
+	border-style:solid;
+	border-radius:10px;
+	border-color:#000000;
+	float:left;
+	clear:none;
+}
+
+
+fieldset
+{
+	width:auto;
+	margin:10px;
+	clear:none;
+	float:left;
+}
+
+img
+{
+	margin:10px;
+}
+
+img#logo
+{
+	margin:0px;
+	float:left;
+}
+
+img#profilbilden
+{
+	margin:0;
+	margin-bottom:10px;
+}
