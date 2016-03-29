@@ -273,15 +273,15 @@ while ($row != null)
 			echo "<img src=\"visabild.php?id=$inlaggsid\" alt=\"Bild\" />";
 		}
 		echo "<div class=\"interagera\">
-        	<a class=\"gillakommentera\" href=\"gilla.php?inlagg=$inlaggsid\">Gilla</a>
-        	<a class=\"gillakommentera\">Kommentera</a>";
+        		<a class=\"gillakommentera\" href=\"gilla.php?inlagg=$inlaggsid\">Gilla</a>
+        		<a class=\"gillakommentera\">Kommentera</a>";
 			if ($anvandarID == $_SESSION["anvandarID"])
 			{
 				echo "<a class=\"gillakommentera\" href=\"radera.php?id=$inlaggsid\">Radera</a>";
 			}
 			echo"
-        	<p class=\"interaktioner\">$antalgillar personer gillar detta</p>
-        	<p class=\"interaktioner\">2 kommentarer</p>
+        		<p class=\"interaktioner\">$antalgillar personer gillar detta</p>
+        		<p class=\"interaktioner\">2 kommentarer</p>
             </div>
         </div>";
 		

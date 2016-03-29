@@ -13,12 +13,14 @@ if(isset($_POST["formular"]))
 		//Logga in användare
 		if(isset($_POST["mail"]) && isset($_POST["losenord"]))
 		{
+			if($_POST["mail"] != "" && $_POST["losenord"] != "")
+			{
+			$hashlosen = MD5($_POST["losenord"]);
+			$mail = $_POST["mail"];
 	
 			//SQL-frågan
 			$sql = "select epost, losenord, fornamn, efternamn, id from anvandare";
 		
-			$hashlosen = MD5($_POST["losenord"]);
-			$mail = $_POST["mail"];
 			
 			//Skicka frågan till databasen
 			$stmt = $conn->prepare($sql);
@@ -53,10 +55,19 @@ if(isset($_POST["formular"]))
 				$row = $stmt->fetch();
 			}
 			
+			}
+			else
+			{
+				//Något fält var tomt
+				echo "Du måste fylla i både mail och lösenord";
+				die();
+			}
 		}
 		else
+		{
 			//En eller flera variabler är tom
 			echo "Någonting var tomt. <a href=\"inlogg.html\">Gå tillbaka till inloggningen</a>";
+		}
 	}
 	else if ($_POST["formular"] == "registrera")
 	{

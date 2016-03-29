@@ -35,7 +35,7 @@ fieldset#sokfalt
 	width:auto;
 	height:48px;
 	vertical-align:middle;
-	position:relative;
+	margin:0px;
 	float:left;
 }
 input[type="search"]
@@ -60,7 +60,7 @@ if (!isset($_SESSION["namn"]))
 }
 header('charset=utf-8');
 $anvandarID = $_SESSION["anvandarID"];
-echo "<a name=\"toppen\"></a>
+echo"
 <div id=\"content\"><div id=\"header\">
 	<img id=\"logo\" src=\"minitwitter.png\" alt=\"logotype\" />
 	</div>
@@ -72,6 +72,7 @@ echo "<a name=\"toppen\"></a>
 	<form id=\"sokform\" name=\"sokform\" method=\"get\" action=\"sok.php\">
 		<fieldset id=\"sokfalt\">
 			<input type=\"search\" id=\"sokruta\" name=\"sokruta\" placeholder=\"Sök efter användare\" required>
+			<input type=\"submit\" value=\"Sök\">
 		</fieldset>
 	</form>
 	</div>
@@ -97,6 +98,7 @@ echo "<a name=\"toppen\"></a>
 	</div>
 ";
 
+echo "<a name=\"toppen\"></a>";
 //Inläggsflödet
 
 //skapa koppling till databasen, ange server, databas, teckenuppsättning, användarnamn och lösenord
