@@ -53,6 +53,22 @@ fieldset
 	
 }
 
+fieldset#sokfalt
+{
+	width:auto;
+	height:48px;
+	vertical-align:middle;
+	margin:0px;
+	float:left;
+}
+input[type="search"]
+{
+	font-size:24px;
+	margin:0px;
+	vertical-align:middle;
+}
+
+
 input[type="text"}
 {
 	margin:10px;
@@ -137,6 +153,15 @@ echo "<a name=\"toppen\"></a>
     <a class=\"meny\" href=\"index.php\"><div class=\"menyknapp\"><p>Hem</p></div></a>
     <a class=\"meny\" href=\"anvandare.php?id=$anvandarID\"><div class=\"menyknapp\"><p>Min profil</p></div></a>
     <a class=\"meny\" href=\"loggaut.php\"><div id=\"menyknapploggaut\"><p>Logga ut</p></div></a>
+	
+	<div id=\"sok\">
+	<form id=\"sokform\" name=\"sokform\" method=\"get\" action=\"sok.php\">
+		<fieldset id=\"sokfalt\">
+			<input type=\"search\" id=\"sokruta\" name=\"sokruta\" placeholder=\"Sök efter användare\" required>
+			<input type=\"submit\" value=\"Sök\">
+		</fieldset>
+	</form>
+	</div>
     </div>
 	
 	<!--Användarprofil-->

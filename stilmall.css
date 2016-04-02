@@ -146,7 +146,7 @@ p.interaktioner
 	float:right;
 }
 
-p,a,h1,h2,h3,h4,h5,h6, label
+p,a,h1,h2,h3,h4,h5,h6,label, th, tr 
 {
 	
 	font-family:status;
