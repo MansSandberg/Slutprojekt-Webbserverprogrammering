@@ -1,81 +1,10 @@
-<link rel="stylesheet" type="text/css" href="stilmall.css" />
-<style>
-#profil
-{
-	background-color:#FFFFFF;
-	width:1000px;
-	height:auto;
-	display:block;
-	overflow:auto;
-	margin-bottom:5px;
-	float:left;
-}
-#profilInfo
-{
-	background-color:#FFFFFF;
-	width:800px;
-	height:auto;
-	display:block;
-	overflow:auto;
-	margin-top:150px;
-	margin-bottom:10px;
-	z-index:2;
-	clear:none;
-	float:left;
-}
-
-#profilBild
-{
-	background-color:#FFFFFF;
-	width:200px;
-	height:auto;
-	display:block;
-	overflow:auto;
-	margin-top:150px;
-	margin-bottom:10px;
-	display:block;
-	z-index:2;
-	float:left;
-	text-align:center;}
-
-form
-{
-	margin:10px;
-}
-
-fieldset
-{
-	width:950px;
-	margin:0px;
-	border:0;
-	clear:none;
-	float:left;
-	
-}
-
-fieldset#sokfalt
-{
-	width:auto;
-	height:48px;
-	vertical-align:middle;
-	margin:0px;
-	float:left;
-}
-input[type="search"]
-{
-	font-size:24px;
-	margin:0px;
-	vertical-align:middle;
-}
-
-
-input[type="text"}
-{
-	margin:10px;
-}
-
-
-</style>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Minitwitter - Användare</title>
+<link rel="stylesheet" type="text/css" href="style/stilmall.css" />
+<link rel="stylesheet" type="text/css" href="style/anvandare.css" />
+</head>
 <?php
 session_start();
 header("Content-type:text/html");
@@ -88,21 +17,21 @@ $anvandarID = $_SESSION["anvandarID"];
 
 if(isset($_GET["id"]))
 {
-	$anvandarID = $_GET["id"];
+	$profilID = $_GET["id"];
 }
 else
 {
-	$anvandarID = $_SESSION["anvandarID"];
+	$profilID = $_SESSION["anvandarID"];
 }
 
 //skapa koppling till databasen, ange server, databas, teckenuppsättning, användarnamn och lösenord
 $conn=new PDO("mysql:host=127.0.0.1;dbname=minitwitter;charset=UTF8","root","");
 
 //tala om att fel skall visas som fel (bra vid utveckling, mindre bra vid skarp drift)
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 //Läs in prfilinfo
-$sqlprofil = "select id, presentation, bredd, hojd from anvandare where id = $anvandarID";
+$sqlprofil = "select id, presentation, bredd, hojd from anvandare where id = $profilID";
 
 //Skicka frågan till databasen
 $stmt = $conn->prepare($sqlprofil);
@@ -169,11 +98,42 @@ echo "<a name=\"toppen\"></a>
     <div id=\"profilInfo\">
     <p class=\"status\">$profilinfo</p>";
 	
-	if ($anvandarID == $_SESSION["anvandarID"])
+	if ($profilID == $_SESSION["anvandarID"])
 	{
+		//Besöker sin egen profil
 		echo "
 			<!--Knapp för att ändra presentation-->
-			<button type=\"button\" id=\"redigeraprofil\" onClick=\"visaProfilAndraing()\">Ändra profil</button>";
+			<button type=\"button\" id=\"redigeraprofil\" onClick=\"visaProfilAndraing()\">Ändra profil</button>
+			<button type=\"button\" onclick=\"window.open('foljer.php')\">Vilka följer jag?</button>";
+	}
+	else
+	{
+		//Besöker någon annans profil
+		//Kolla om användaren följs
+		$sqlkollafoljstatus = "select foljarID, foljdID from foljningar where foljarid=$anvandarID and foljdid=$profilID";
+		
+		//Skicka frågan till databasen
+		$stmt2 = $conn->prepare($sqlkollafoljstatus);
+			
+		//Kör frågan
+		$stmt2->execute();
+			
+		//Hämta resultat från databasen
+		$row = $stmt2->fetch();
+			
+		//Avsluta om det inte kom någon rad
+		if (!$row)
+		{
+			echo "<p>Du följer inte</p>";
+			echo"<button type=\"button\" onClick=\"window.location.href='foljning.php?funktion=folj&id=$profilID'\">Följ</button>";
+		}
+		
+		//Upprepa så länge det finns en rad
+		if ($row != null)
+		{
+			echo "<p>Du följer</p>";
+			echo"<button type=\"button\" onClick=\"window.location.href='foljning.php?funktion=slutafolja&id=$profilID'\">Sluta följa</button>";
+		}
 	}
 	echo "
 	<br/><br/>
@@ -194,8 +154,8 @@ echo "<a name=\"toppen\"></a>
 	
     </div>
     <div id=\"profilBild\">
-	<img id=\"profilbilden\" src=\"visaprofilbild.php?id=$anvandarID\" width=\"200\" height=\"$nybildhojd\"/>";
-	if ($anvandarID == $_SESSION["anvandarID"])
+	<img id=\"profilbilden\" src=\"visaprofilbild.php?id=$profilID\" width=\"200\" height=\"$nybildhojd\"/>";
+	if ($profilID == $_SESSION["anvandarID"])
 	{
 		echo"
 		<!--Knapp för profilbildsbyte-->
@@ -235,7 +195,7 @@ echo "<a name=\"toppen\"></a>
 
 //Inläggsflödet
 
-$sql = "select id, datumskapat, text, bild, anvandarID, namnAnvandare from inlagg where anvandarid = $anvandarID order by datumskapat desc";
+$sql = "select id, datumskapat, text, bild, anvandarID, namnAnvandare from inlagg where anvandarid = $profilID order by datumskapat desc";
 
 
 //Skicka frågan till databasen
@@ -258,7 +218,7 @@ while ($row != null)
 {
 	$text = $row['text'];
 	$bild = $row['bild'];
-	$anvandarID = $row['anvandarID'];
+	$profilID = $row['anvandarID'];
 	$inlaggsid = $row['id'];
 	$namn = $row['namnAnvandare'];
 	
@@ -290,7 +250,7 @@ while ($row != null)
     	echo "
 		<a id=\"$inlaggsid\"></a>
 		<div class=\"inlagg\">
-		<p class=\"status\"><b><a href=\"anvandare.php?id=$anvandarID\">$namn</a></b> $text</p>";
+		<p class=\"status\"><b><a href=\"anvandare.php?id=$profilID\">$namn</a></b> $text</p>";
 		
 		if ($bild != null)
 		{
@@ -299,8 +259,8 @@ while ($row != null)
 		}
 		echo "<div class=\"interagera\">
         		<a class=\"gillakommentera\" href=\"gilla.php?inlagg=$inlaggsid\">Gilla</a>
-        		<a class=\"gillakommentera\">Kommentera</a>";
-			if ($anvandarID == $_SESSION["anvandarID"])
+        		<a class=\"gillakommentera\" href=\"inlagg.php?id=$inlaggsid\">Kommentera</a>";
+			if ($profilID == $_SESSION["anvandarID"])
 			{
 				echo "<a class=\"gillakommentera\" href=\"radera.php?id=$inlaggsid\">Radera</a>";
 			}
@@ -321,13 +281,6 @@ while ($row != null)
   <a href=\"#toppen\">Gå till toppen</a>
   </div>";
 ?>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Minitwitter - Användare</title>
-
-</head>
-
 <body>
 <script src="visa.js"></script>
 </body>

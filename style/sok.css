@@ -1,0 +1,43 @@
+@charset "utf-8";
+
+form
+{
+	margin:10px;
+}
+
+fieldset
+{
+	width:950px;
+	margin:0px;
+	border:0;
+	clear:none;
+	float:left;
+}
+
+#sok
+{
+	width:auto;
+	height:50px;
+	padding:0px;
+	float:left;
+	
+}
+fieldset#sokfalt
+{
+	width:auto;
+	height:48px;
+	vertical-align:middle;
+	margin:0px;
+	float:left;
+}
+input[type="search"]
+{
+	font-size:24px;
+	margin:0px;
+	vertical-align:middle;
+}
+
+input[type="text"}
+{
+	margin:10px;
+}

@@ -2,54 +2,13 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="stilmall.css" />
+<link rel="stylesheet" type="text/css" href="style/stilmall.css" />
+<link rel="stylesheet" type="text/css" href="style/index.css" />
 <title>Minitwitter</title>
 
 </head>
 <body>
 <style>
-form
-{
-	margin:10px;
-}
-
-fieldset
-{
-	width:950px;
-	margin:0px;
-	border:0;
-	clear:none;
-	float:left;
-}
-
-#sok
-{
-	width:auto;
-	height:50px;
-	padding:0px;
-	float:left;
-	
-}
-
-fieldset#sokfalt
-{
-	width:auto;
-	height:48px;
-	vertical-align:middle;
-	margin:0px;
-	float:left;
-}
-input[type="search"]
-{
-	font-size:24px;
-	margin:0px;
-	vertical-align:middle;
-}
-
-input[type="text"}
-{
-	margin:10px;
-}
 
 </style>
 <?php
@@ -102,7 +61,7 @@ echo"
 		</form>
 	</div>
 ";
-echo "Inläggen är sorterade ".$_SESSION['sortering'] ."<a href=\"andrasortering.php\">Ändra sortering</a> (kronologiskt/populärast)";
+echo "<p>Inläggen är sorterade ".$_SESSION['sortering'] ."<a href=\"andrasortering.php\">Ändra sortering</a> (kronologiskt/populärast)</p>";
 echo "<a name=\"toppen\"></a>";
 //Inläggsflödet
 
@@ -110,19 +69,50 @@ echo "<a name=\"toppen\"></a>";
 $conn=new PDO("mysql:host=127.0.0.1;dbname=minitwitter;charset=UTF8","root","");
 
 //tala om att fel skall visas som fel (bra vid utveckling, mindre bra vid skarp drift)
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-//Kolla vilken ordning inläggen ska visas i
+//Kolla vilka jag följer
+$sqlfoljer="select foljarid, foljdid from foljningar where foljarid =$anvandarID";
+
+//Skicka frågan till databasen
+$stmt = $conn->prepare($sqlfoljer);
+	
+//Kör frågan
+$stmt->execute();
+	
+//Hämta resultat från databasen
+$row = $stmt->fetch();
+	
+//Avsluta om det inte kom någon rad
+if (!$row)
+{
+	echo "Du följer inte någon än.";
+}
+
+//array som innehåller IDn på alla som jag följer
+$foljer = array($anvandarID);
+
+//Upprepa så länge det finns en rad
+while ($row != null)
+{
+	array_push($foljer, $row['foljdid']);
+	
+	//Hämta nästa rad
+	$row = $stmt->fetch();
+}
+
+//Kolla vilken ordning inläggen ska visas i (Kronologiskt eller efter antal gillningar)
 if($_SESSION["sortering"] == "kronologiskt")
 {
 	//Kronologiskt flöde
-	$sql = "select id, datumskapat, text, bild, anvandarID, namnAnvandare from inlagg order by datumskapat desc";
+	$in  = str_repeat('?,', count($foljer) - 1) . '?';
+	$sql = "select id, datumskapat, text, bild, anvandarID, namnAnvandare from inlagg WHERE anvandarID IN ($in) order by datumskapat desc";
 
 	//Skicka frågan till databasen
 	$stmt = $conn->prepare($sql);
 	
 	//Kör frågan
-	$stmt->execute();
+	$stmt->execute($foljer);
 	
 	//Hämta resultat från databasen
 	$row = $stmt->fetch();
@@ -141,54 +131,79 @@ if($_SESSION["sortering"] == "kronologiskt")
 		$anvandarID = $row['anvandarID'];
 		$inlaggsid = $row['id'];
 		$namn = $row['namnAnvandare'];
-	
+		
+		//Om användaren följer personen, skriv ut hens inlägg
+			
 		//Räkna antal gilla-markeringar
 		$sqlgillar = "select count(*) as antalgillar from gillningar where inlaggsid = :inlaggsid";
-	
+			
 		$params2 = array(':inlaggsid'=>$row['id']);
-	
+			
 		//Skicka frågan till databasen
 		$stmt2 = $conn->prepare($sqlgillar);
-	
+			
 		//Kör frågan
 		$stmt2->execute($params2);
-	
+			
 		//Hämta resultat från databasen
 		$row = $stmt2->fetch();
-	
+			
 		if($row == null)
 		{
 			$antalgillar = 0;
 		}
+			
 		if($row != null)
 		{
 			$antalgillar = $row['antalgillar'];
 		}
-	
+		
+		//Räkna antal kommentarer
+		$sqlkommentarer ="select count(*) as antalkommentarer from kommentarer where inlaggsid = :inlaggsid";
+		
+		//Skicka frågan till databasen
+		$stmt2=$conn->prepare($sqlkommentarer);
+		
+		//Kör frågan
+		$stmt2->execute($params2);
+		
+		//Hämta resultat från databasen
+		$row = $stmt2->fetch();
+		
+		if($row == null)
+		{
+			$antalkommentarer = 0;
+		}
+		
+		if($row != null)
+		{
+			$antalkommentarer = $row['antalkommentarer'];
+		}
+			
 		//Skriv ut inlägget
-    		echo "
-			<a id=\"$inlaggsid\"></a>
-			<div class=\"inlagg\">
-			<p class=\"status\"><b><a href=\"anvandare.php?id=$anvandarID\">$namn</a></b> $text</p>";
-		
-			if ($bild != null)
+		echo "
+				<a id=\"$inlaggsid\"></a>
+				<div class=\"inlagg\">
+				<p class=\"status\"><b><a href=\"anvandare.php?id=$anvandarID\">$namn</a></b> $text</p>";
+				
+		if ($bild != null)
+		{
+			//Lägg tll bild
+			echo "<img src=\"visabild.php?id=$inlaggsid\" alt=\"Bild\" />";
+		}
+		echo "<div class=\"interagera\">
+					<a class=\"gillakommentera\" href=\"gilla.php?inlagg=$inlaggsid\">Gilla</a>
+					<a class=\"gillakommentera\" href=\"inlagg.php?id=$inlaggsid\">Kommentera</a>";
+			if ($anvandarID == $_SESSION["anvandarID"])
 			{
-				//Lägg tll bild
-				echo "<img src=\"visabild.php?id=$inlaggsid\" alt=\"Bild\" />";
+				echo "<a class=\"gillakommentera\" href=\"radera.php?id=$inlaggsid\">Radera</a>";
 			}
-			echo "<div class=\"interagera\">
-        		<a class=\"gillakommentera\" href=\"gilla.php?inlagg=$inlaggsid\">Gilla</a>
-        		<a class=\"gillakommentera\">Kommentera</a>";
-				if ($anvandarID == $_SESSION["anvandarID"])
-				{
-					echo "<a class=\"gillakommentera\" href=\"radera.php?id=$inlaggsid\">Radera</a>";
-				}
-				echo"
-        		<p class=\"interaktioner\">$antalgillar personer gillar detta</p>
-        		<p class=\"interaktioner\">2 kommentarer</p>
-            	</div>
-        	</div>";
-		
+			echo"
+					<p class=\"interaktioner\">$antalgillar personer gillar detta</p>
+					<p class=\"interaktioner\">$antalkommentarer kommentarer</p>
+					</div>
+				</div>";
+				
 		//Hämta nästa rad
 		$row = $stmt->fetch();
 	}
@@ -197,88 +212,111 @@ else if ($_SESSION["sortering"] == "populart")
 {
 	//Populärt flöde
 	
+	//Om användaren följer personen, skriv ut hens inlägg	
 	//Kolla vilka inlägg som har flest gillningar, lägg dem först i listan
-	$sql = "select inlaggsid,count(*) as antalGillningar from gillningar GROUP by inlaggsid order by antalGillningar DESC";
-	
-	
+	$in  = str_repeat('?,', count($foljer) - 1) . '?';
+	$sql = "select id, datumskapat, text, bild, anvandarID, namnAnvandare from inlagg WHERE anvandarID IN ($in)";
+
 	//Skicka frågan till databasen
 	$stmt = $conn->prepare($sql);
 	
 	//Kör frågan
-	$stmt->execute();
+	$stmt->execute($foljer);
 	
 	//Hämta resultat från databasen
 	$row = $stmt->fetch();
-	
+		
 	//Avsluta om det inte kom någon rad
 	if (!$row)
 	{
 		exit();
 	}
-
+	
 	//Upprepa så länge det finns en rad
 	while ($row != null)
 	{
-		//Hämta det inlägget med det aktuella ID
-		$ID = $row['inlaggsid'];	
-		$antalgillningar = $row['antalGillningar'];
-		//Räkna antal gilla-markeringar
-		$sqlinlagg = "select id, datumskapat, text, bild, anvandarID, namnAnvandare from inlagg where id=:id";
-	
-		$params2 = array(':id'=>$ID);
-	
-		//Skicka frågan till databasen
-		$stmt2 = $conn->prepare($sqlinlagg);
-	
-		//Kör frågan
-		$stmt2->execute($params2);
-	
-		//Hämta resultat från databasen
-		$row = $stmt2->fetch();
-	
 		$text = $row['text'];
 		$bild = $row['bild'];
+		$anvandarID = $row['anvandarID'];
 		$inlaggsid = $row['id'];
 		$namn = $row['namnAnvandare'];
 		
+		//Om användaren följer personen, skriv ut hens inlägg
+			
+		//Räkna antal gilla-markeringar
+		$sqlgillar = "select count(*) as antalgillar from gillningar where inlaggsid = :inlaggsid";
+			
+		$params2 = array(':inlaggsid'=>$row['id']);
+			
+		//Skicka frågan till databasen
+		$stmt2 = $conn->prepare($sqlgillar);
+			
+		//Kör frågan
+		$stmt2->execute($params2);
+			
+		//Hämta resultat från databasen
+		$row = $stmt2->fetch();
+			
 		if($row == null)
 		{
 			$antalgillar = 0;
 		}
+			
 		if($row != null)
 		{
-			$antalgillar = $antalgillningar;
+			$antalgillar = $row['antalgillar'];
 		}
-	
+		
+		//Räkna antal kommentarer
+		$sqlkommentarer ="select count(*) as antalkommentarer from kommentarer where inlaggsid = :inlaggsid";
+		
+		//Skicka frågan till databasen
+		$stmt2=$conn->prepare($sqlkommentarer);
+		
+		//Kör frågan
+		$stmt2->execute($params2);
+		
+		//Hämta resultat från databasen
+		$row = $stmt2->fetch();
+		
+		if($row == null)
+		{
+			$antalkommentarer = 0;
+		}
+		
+		if($row != null)
+		{
+			$antalkommentarer = $row['antalkommentarer'];
+		}
+		
 		//Skriv ut inlägget
-    		echo "
-			<a id=\"$inlaggsid\"></a>
-			<div class=\"inlagg\">
-			<p class=\"status\"><b><a href=\"anvandare.php?id=$anvandarID\">$namn</a></b> $text</p>";
+		echo "
+				<a id=\"$inlaggsid\"></a>
+				<div class=\"inlagg\">
+				<p class=\"status\"><b><a href=\"anvandare.php?id=$anvandarID\">$namn</a></b> $text</p>";
+			
+		if ($bild != null)
+		{
+			//Lägg tll bild
+			echo "<img src=\"visabild.php?id=$inlaggsid\" alt=\"Bild\" />";
+		}
 		
-			if ($bild != null)
-			{
-				//Lägg tll bild
-				echo "<img src=\"visabild.php?id=$inlaggsid\" alt=\"Bild\" />";
-			}
-			echo "<div class=\"interagera\">
-        		<a class=\"gillakommentera\" href=\"gilla.php?inlagg=$inlaggsid\">Gilla</a>
-        		<a class=\"gillakommentera\">Kommentera</a>";
-				if ($anvandarID == $_SESSION["anvandarID"])
-				{
-					echo "<a class=\"gillakommentera\" href=\"radera.php?id=$inlaggsid\">Radera</a>";
-				}
-				echo"
-        		<p class=\"interaktioner\">$antalgillar personer gillar detta</p>
-        		<p class=\"interaktioner\">2 kommentarer</p>
-            	</div>
-        	</div>";
-		
+		echo "<div class=\"interagera\">
+					<a class=\"gillakommentera\" href=\"gilla.php?inlagg=$inlaggsid\">Gilla</a>
+					<a class=\"gillakommentera\" href=\"inlagg.php?id=$inlaggsid\">Kommentera</a>";
+		if ($anvandarID == $_SESSION["anvandarID"])
+		{
+			echo "<a class=\"gillakommentera\" href=\"radera.php?id=$inlaggsid\">Radera</a>";
+		}
+		echo"
+					<p class=\"interaktioner\">$antalgillar personer gillar detta</p>
+					<p class=\"interaktioner\">$antalkommentarer kommentarer</p>
+					</div>
+				</div>";
+			
 		//Hämta nästa rad
 		$row = $stmt->fetch();
-	
 	}
-
 }
 else
 {

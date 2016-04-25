@@ -5,7 +5,7 @@ if(isset($_GET["id"]))
 	$conn=new PDO("mysql:host=127.0.0.1;dbname=minitwitter;charset=UTF8","root","");
 	
 	//tala om att fel skall visas som fel (bra vid utveckling, mindre bra vid skarp drift)
-	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	//$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	
 	//SQL-fråga
 	$sql = "select id, profilbild, bildtyp from anvandare where id=:id";

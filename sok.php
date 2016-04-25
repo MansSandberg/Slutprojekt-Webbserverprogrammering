@@ -2,55 +2,12 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="stilmall.css" />
+<link rel="stylesheet" type="text/css" href="style/stilmall.css" />
+<link rel="stylesheet" type="text/css" href="style/sok.css" />
 <title>Minitwitter - Sök</title>
 
 </head>
 <body>
-<style>
-form
-{
-	margin:10px;
-}
-
-fieldset
-{
-	width:950px;
-	margin:0px;
-	border:0;
-	clear:none;
-	float:left;
-}
-
-#sok
-{
-	width:auto;
-	height:50px;
-	padding:0px;
-	float:left;
-	
-}
-fieldset#sokfalt
-{
-	width:auto;
-	height:48px;
-	vertical-align:middle;
-	margin:0px;
-	float:left;
-}
-input[type="search"]
-{
-	font-size:24px;
-	margin:0px;
-	vertical-align:middle;
-}
-
-input[type="text"}
-{
-	margin:10px;
-}
-
-</style>
 <?php
 session_start();
 header("Content-type:text/html");
@@ -93,10 +50,10 @@ echo"
 $conn=new PDO("mysql:host=127.0.0.1;dbname=minitwitter;charset=UTF8","root","");
 
 //tala om att fel skall visas som fel (bra vid utveckling, mindre bra vid skarp drift)
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 //Användare
-$sqlanvandare="select id, fornamn, efternamn, presentation from anvandare where fornamn like :sokterm or efternamn like :sokterm";
+$sqlanvandare="select id, fornamn, efternamn,  presentation from anvandare where fornamn like :sokterm or efternamn like :sokterm or concat(fornamn, ' ', efternamn) like :sokterm";
 
 if(isset($_GET["sokruta"]))
 {

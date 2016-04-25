@@ -1,0 +1,74 @@
+@charset "utf-8";
+#profil
+{
+	background-color:#FFFFFF;
+	width:1000px;
+	height:auto;
+	display:block;
+	overflow:auto;
+	margin-bottom:5px;
+	float:left;
+}
+#profilInfo
+{
+	background-color:#FFFFFF;
+	width:800px;
+	height:auto;
+	display:block;
+	overflow:auto;
+	margin-top:0px;
+	margin-bottom:10px;
+	z-index:2;
+	clear:none;
+	float:left;
+}
+
+#profilBild
+{
+	background-color:#FFFFFF;
+	width:200px;
+	height:auto;
+	display:block;
+	overflow:auto;
+	margin-top:0px;
+	margin-bottom:10px;
+	display:block;
+	z-index:2;
+	float:left;
+	text-align:center;}
+
+form
+{
+	margin:10px;
+}
+
+fieldset
+{
+	width:950px;
+	margin:0px;
+	border:0;
+	clear:none;
+	float:left;
+	
+}
+
+fieldset#sokfalt
+{
+	width:auto;
+	height:48px;
+	vertical-align:middle;
+	margin:0px;
+	float:left;
+}
+input[type="search"]
+{
+	font-size:24px;
+	margin:0px;
+	vertical-align:middle;
+}
+
+
+input[type="text"}
+{
+	margin:10px;
+}

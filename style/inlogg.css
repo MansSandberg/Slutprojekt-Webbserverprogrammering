@@ -1,0 +1,43 @@
+@charset "utf-8";
+#content
+{
+	background-color:#FFFFFF;
+}
+#registrera
+{
+	display:none;
+}
+
+#loggaIn
+{
+	display:block;
+}
+
+fieldset#loggain
+{
+	width:300px;
+	height:auto;
+	display:inline-block;
+	overflow:auto;
+	margin-bottom:10px;
+}
+
+fieldset#registrera
+{
+	width:400px;
+	height:auto;
+	display:inline-block;
+	overflow:auto;
+	margin-bottom:10px;
+}
+
+#flode
+{
+	margin-top:0px;
+	background-color:#FFFFFF;
+}
+
+button
+{
+	margin:10px;
+}

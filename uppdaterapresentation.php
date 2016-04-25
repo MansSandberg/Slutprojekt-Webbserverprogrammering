@@ -5,7 +5,7 @@ $anvandarID = $_SESSION["anvandarID"];
 $conn=new PDO("mysql:host=127.0.0.1;dbname=minitwitter;charset=UTF8","root","");
 	
 //tala om att fel skall visas som fel (bra vid utveckling, mindre bra vid skarp drift)
-$conn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+//$conn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
 if(isset($_POST["nypresentation"]))
 {
